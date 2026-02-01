@@ -14,14 +14,13 @@ final class EmployeePhone extends StringValueObject
 
     public static function create(string $value): static
     {
-        // Eliminar espacios y caracteres comunes
+
         $normalized = preg_replace('/[\s\-\(\)\.]+/', '', $value);
 
         if (empty($normalized)) {
             throw InvalidEmployeePhoneException::empty();
         }
 
-        // Validar que solo contenga números y opcionalmente + al inicio
         if (!preg_match('/^\+?[0-9]+$/', $normalized)) {
             throw InvalidEmployeePhoneException::invalidFormat($value);
         }

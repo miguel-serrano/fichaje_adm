@@ -30,10 +30,8 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
             WorkplaceRepository::class,
         );
 
-        // Servicio de validación de geofence
         $this->getServiceContainer()->bind(GeofenceValidator::class);
 
-        // Registrar voter
         $this->getServiceContainer()->bind(WorkplaceVoter::class);
         AuthServiceProvider::tagVoter($this, WorkplaceVoter::class);
     }

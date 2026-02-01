@@ -33,37 +33,29 @@ final class SharedServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Command Bus (con transacciones y logging)
+
         $this->registerCommandBus();
 
-        // Query Bus (singleton)
         $this->app->singleton(QueryBusInterface::class, SimpleQueryBus::class);
 
-        // Correlation ID Provider
         $this->app->singleton(CorrelationIdProvider::class);
 
-        // Event Enricher
         $this->registerEventEnricher();
 
-        // MySQL Event Store (siempre disponible)
         $this->registerMysqlEventStore();
 
-        // Elasticsearch Event Store (opcional)
         $this->registerElasticsearchEventStore();
 
-        // Event Synchronizer
         $this->registerEventSynchronizer();
 
-        // Event Bus (usa Outbox pattern)
         $this->registerEventBus();
 
-        // Query handlers
         $this->registerQueryHandlers();
     }
 
     public function boot(): void
     {
-        // Registrar comandos de consola
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreateElasticsearchIndexCommand::class,
@@ -75,11 +67,10 @@ final class SharedServiceProvider extends ServiceProvider
 
     private function registerEventEnricher(): void
     {
-        // Providers de contexto
+
         $this->app->singleton(UserContextProvider::class);
         $this->app->singleton(RequestContextProvider::class);
 
-        // GeoIP Provider (opcional)
         $this->app->singleton(GeoIpProvider::class, function () {
             return new GeoIpProvider(
                 provider: config('services.geoip.provider', 'ip-api'),
@@ -87,7 +78,6 @@ final class SharedServiceProvider extends ServiceProvider
             );
         });
 
-        // Event Enricher principal
         $this->app->singleton(EventEnricher::class, function ($app) {
             return new EventEnricher(
                 correlationIdProvider: $app->make(CorrelationIdProvider::class),
@@ -114,10 +104,8 @@ final class SharedServiceProvider extends ServiceProvider
         $this->app->singleton(CommandBusInterface::class, function ($app) {
             $simpleCommandBus = new SimpleCommandBus($app);
 
-            // Envolver con logging
             $loggingBus = new LoggingCommandBus($simpleCommandBus);
 
-            // Envolver con transacciones
             return new TransactionalCommandBus($loggingBus);
         });
     }
@@ -133,7 +121,6 @@ final class SharedServiceProvider extends ServiceProvider
             );
         });
 
-        // Bind interface solo si está habilitado
         if (config('elasticsearch.enabled', false)) {
             $this->app->bind(EventStoreInterface::class, ElasticsearchEventStore::class);
         }
@@ -152,7 +139,7 @@ final class SharedServiceProvider extends ServiceProvider
     private function registerEventBus(): void
     {
         $this->app->singleton(EventBusInterface::class, function ($app) {
-            // Siempre usar OutboxEventBus que persiste en MySQL
+
             return new OutboxEventBus(
                 container: $app,
                 mysqlEventStore: $app->make(MysqlEventStore::class),
@@ -165,7 +152,6 @@ final class SharedServiceProvider extends ServiceProvider
         /** @var SimpleQueryBus $queryBus */
         $queryBus = $this->app->make(QueryBusInterface::class);
 
-        // Solo registrar búsqueda en ES si está habilitado
         if (config('elasticsearch.enabled', false)) {
             $queryBus->map([
                 SearchEventsQuery::class => SearchEventsQueryHandler::class,

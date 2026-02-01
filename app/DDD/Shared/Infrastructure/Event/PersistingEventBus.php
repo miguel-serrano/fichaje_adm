@@ -28,10 +28,9 @@ final class PersistingEventBus implements EventBusInterface
     public function publish(DomainEvent ...$events): void
     {
         foreach ($events as $event) {
-            // 1. Persistir en EventStore (si está configurado)
+
             $this->persistEvent($event);
 
-            // 2. Despachar a subscribers
             $this->dispatchToSubscribers($event);
         }
     }
@@ -42,7 +41,7 @@ final class PersistingEventBus implements EventBusInterface
             try {
                 $this->eventStore->append($event);
             } catch (\Throwable $e) {
-                // Log error pero no fallar el flujo principal
+
                 report($e);
             }
         }
@@ -61,7 +60,7 @@ final class PersistingEventBus implements EventBusInterface
                 $subscriber = $this->container->make($subscriberClass);
                 $subscriber($event);
             } catch (\Throwable $e) {
-                // Log error pero continuar con otros subscribers
+
                 report($e);
             }
         }
@@ -86,7 +85,7 @@ final class PersistingEventBus implements EventBusInterface
      */
     public function subscribeToAll(string $subscriberClass): void
     {
-        // Este subscriber se añadirá dinámicamente cuando se publique cualquier evento
+
         $this->subscribers['*'][] = $subscriberClass;
     }
 }

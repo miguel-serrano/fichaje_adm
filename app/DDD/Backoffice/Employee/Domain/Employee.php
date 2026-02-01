@@ -65,7 +65,6 @@ class Employee
             workplaceIds: $workplaceIds,
         );
 
-        // Registrar evento de dominio
         $employee->recordEvent(new EmployeeCreatedEvent(
             aggregateId: (string) $id->value(),
             name: $name->value(),

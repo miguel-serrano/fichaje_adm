@@ -19,7 +19,7 @@ use DateTimeImmutable;
  */
 final class CheckLateArrivalOnClockInCreated implements DomainEventSubscriber
 {
-    private const TOLERANCE_MINUTES = 5; // Tolerancia de 5 minutos
+    private const TOLERANCE_MINUTES = 5;
 
     public function __construct(
         private readonly EmployeeRepositoryInterface $employeeRepository,
@@ -35,7 +35,7 @@ final class CheckLateArrivalOnClockInCreated implements DomainEventSubscriber
 
     public function __invoke(ClockInCreatedEvent $event): void
     {
-        // Solo verificar fichajes de entrada
+
         if ($event->type() !== ClockInType::ENTRY->value) {
             return;
         }
@@ -49,7 +49,7 @@ final class CheckLateArrivalOnClockInCreated implements DomainEventSubscriber
         }
 
         $timestamp = new DateTimeImmutable($event->timestamp());
-        $dayOfWeek = (int) $timestamp->format('N'); // 1=Monday, 7=Sunday
+        $dayOfWeek = (int) $timestamp->format('N');
 
         $planification = $employee->planification();
         $daySchedule = $planification->weekSchedule()->getDay($dayOfWeek);
@@ -63,16 +63,13 @@ final class CheckLateArrivalOnClockInCreated implements DomainEventSubscriber
             return;
         }
 
-        // Calcular hora esperada de entrada
         $expectedDateTime = DateTimeImmutable::createFromFormat(
             'Y-m-d H:i',
             $timestamp->format('Y-m-d') . ' ' . $expectedStartTime
         );
 
-        // Calcular diferencia en minutos
         $diffMinutes = ($timestamp->getTimestamp() - $expectedDateTime->getTimestamp()) / 60;
 
-        // Si llegó tarde más allá de la tolerancia
         if ($diffMinutes > self::TOLERANCE_MINUTES) {
             $this->eventBus->publish(new LateArrivalDetectedEvent(
                 aggregateId: $event->aggregateId(),

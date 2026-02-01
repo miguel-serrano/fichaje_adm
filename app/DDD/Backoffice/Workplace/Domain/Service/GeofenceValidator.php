@@ -31,11 +31,11 @@ final class GeofenceValidator
         $workplace = $this->workplaceRepository->findById($workplaceId);
 
         if ($workplace === null) {
-            return; // Si no existe el workplace, no validamos
+            return;
         }
 
         if (!$workplace->hasGeofence()) {
-            return; // Sin geofence configurado, siempre válido
+            return;
         }
 
         if (!$workplace->isWithinGeofence($latitude, $longitude)) {

@@ -170,7 +170,6 @@ final class RequestContextProvider
     {
         $params = $request->query();
 
-        // Filtrar parámetros sensibles
         $sensitiveKeys = ['password', 'token', 'secret', 'api_key', 'key'];
 
         return array_filter($params, function ($key) use ($sensitiveKeys) {

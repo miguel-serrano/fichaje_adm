@@ -23,7 +23,6 @@ final class MarkAsReadCommandHandler
             return;
         }
 
-        // Verificar que el destinatario es el correcto
         if ($notification->recipientId()->value() !== $command->recipientId) {
             return;
         }

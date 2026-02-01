@@ -13,7 +13,7 @@ use Illuminate\Contracts\Container\Container;
  * EventBus que:
  * 1. Persiste TODOS los eventos en MySQL (Outbox pattern)
  * 2. Despacha a subscribers en memoria
- * 
+ *
  * Los eventos se sincronizan a Elasticsearch via un job/comando separado
  */
 final class OutboxEventBus implements EventBusInterface
@@ -29,10 +29,9 @@ final class OutboxEventBus implements EventBusInterface
     public function publish(DomainEvent ...$events): void
     {
         foreach ($events as $event) {
-            // 1. Persistir en MySQL (siempre, es la fuente de verdad)
+
             $this->persistEvent($event);
 
-            // 2. Despachar a subscribers en memoria
             $this->dispatchToSubscribers($event);
         }
     }
@@ -42,9 +41,9 @@ final class OutboxEventBus implements EventBusInterface
         try {
             $this->mysqlEventStore->append($event);
         } catch (\Throwable $e) {
-            // Log error - esto es crítico, no debería fallar
+
             report($e);
-            throw $e; // Re-lanzar para que la transacción falle
+            throw $e;
         }
     }
 
@@ -61,7 +60,7 @@ final class OutboxEventBus implements EventBusInterface
                 $subscriber = $this->container->make($subscriberClass);
                 $subscriber($event);
             } catch (\Throwable $e) {
-                // Log pero no fallar - los subscribers son "best effort"
+
                 report($e);
             }
         }

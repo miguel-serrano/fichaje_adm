@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 
 final class SyncEventsToElasticsearchCommand extends Command
 {
-    protected $signature = 'events:sync 
+    protected $signature = 'events:sync
                             {--batch=100 : Número de eventos por lote}
                             {--continuous : Ejecutar continuamente hasta que no haya pendientes}';
 
@@ -57,7 +57,6 @@ final class SyncEventsToElasticsearchCommand extends Command
             ]
         );
 
-        // Mostrar estadísticas
         $stats = $synchronizer->getStats();
         $this->newLine();
         $this->info("Estadísticas:");

@@ -14,13 +14,12 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
 {
     public function register(): void
     {
-        // Repositorio de User
+
         $this->getServiceContainer()->bind(
             UserRepositoryInterface::class,
             UserRepository::class,
         );
 
-        // Adaptador para el sistema de Authorization
         $this->getServiceContainer()->bind(
             AuthUserRepositoryInterface::class,
             AuthorizationUserRepository::class,

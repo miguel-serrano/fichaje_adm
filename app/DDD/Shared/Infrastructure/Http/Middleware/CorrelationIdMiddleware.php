@@ -21,19 +21,16 @@ final class CorrelationIdMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-        // Obtener o generar Correlation ID
+
         $correlationId = $this->correlationIdProvider->get();
 
-        // Compartir en contexto de logs
         Log::shareContext([
             'correlation_id' => $correlationId,
-            'request_id' => $correlationId, // Alias
+            'request_id' => $correlationId,
         ]);
 
-        // Procesar request
         $response = $next($request);
 
-        // Añadir header a la respuesta
         $response->headers->set('X-Correlation-ID', $correlationId);
         $response->headers->set('X-Request-ID', $correlationId);
 
@@ -42,7 +39,7 @@ final class CorrelationIdMiddleware
 
     public function terminate(Request $request, Response $response): void
     {
-        // Reset para la próxima request
+
         $this->correlationIdProvider->reset();
     }
 }

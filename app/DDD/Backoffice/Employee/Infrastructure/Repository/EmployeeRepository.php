@@ -44,7 +44,6 @@ final class EmployeeRepository implements EmployeeRepositoryInterface
             ],
         );
 
-        // Guardar contrato si existe
         if ($data['contract'] !== null) {
             EloquentEmployeeContractModel::updateOrCreate(
                 ['employee_id' => $model->id],
@@ -57,7 +56,6 @@ final class EmployeeRepository implements EmployeeRepositoryInterface
             );
         }
 
-        // Guardar planificación si existe
         if ($data['planification'] !== null) {
             EloquentEmployeePlanificationModel::updateOrCreate(
                 ['employee_id' => $model->id],
@@ -68,7 +66,6 @@ final class EmployeeRepository implements EmployeeRepositoryInterface
             );
         }
 
-        // Sincronizar workplaces
         $model->workplaces()->sync($data['workplace_ids']);
     }
 

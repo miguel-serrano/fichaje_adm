@@ -34,11 +34,11 @@ abstract class AbstractLaravelServiceProvider extends ServiceProvider
 
     protected function mapCommands(): void
     {
-        // Override en subclases
+
     }
 
     protected function mapQueries(): void
     {
-        // Override en subclases
+
     }
 }

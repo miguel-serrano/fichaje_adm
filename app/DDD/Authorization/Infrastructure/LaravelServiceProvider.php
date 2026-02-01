@@ -23,7 +23,6 @@ final class LaravelServiceProvider extends ServiceProvider
         $this->app->singleton(AuthorizationServiceInterface::class, function ($app) {
             $service = new AuthorizationService();
 
-            // Registrar todos los voters taggeados
             foreach ($app->tagged('voters') as $voter) {
                 $service->registerVoter($voter);
             }

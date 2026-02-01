@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Http;
 
 /**
  * Provee geolocalización por IP
- * 
+ *
  * Soporta múltiples proveedores:
  * - ip-api.com (gratis, limitado)
  * - MaxMind GeoIP2 (de pago, más preciso)
  */
 final class GeoIpProvider
 {
-    private const CACHE_TTL = 86400; // 24 horas
+    private const CACHE_TTL = 86400;
 
     public function __construct(
         private readonly string $provider = 'ip-api',
@@ -29,7 +29,6 @@ final class GeoIpProvider
             return null;
         }
 
-        // Intentar desde cache
         $cacheKey = "geoip:{$ip}";
         $cached = Cache::get($cacheKey);
 
@@ -37,7 +36,6 @@ final class GeoIpProvider
             return $cached;
         }
 
-        // Lookup según provider
         $result = match ($this->provider) {
             'maxmind' => $this->lookupMaxMind($ip),
             default => $this->lookupIpApi($ip),

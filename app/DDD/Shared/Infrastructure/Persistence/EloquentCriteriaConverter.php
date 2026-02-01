@@ -16,12 +16,11 @@ final class EloquentCriteriaConverter
 {
     public static function apply(Builder $query, Criteria $criteria): Builder
     {
-        // Aplicar filtros
+
         foreach ($criteria->filters() as $filter) {
             $query = self::applyFilter($query, $filter);
         }
 
-        // Aplicar orden
         if ($criteria->order() !== null) {
             $query->orderBy(
                 $criteria->order()->field,
@@ -29,12 +28,10 @@ final class EloquentCriteriaConverter
             );
         }
 
-        // Aplicar limit
         if ($criteria->limit() !== null) {
             $query->limit($criteria->limit());
         }
 
-        // Aplicar offset
         if ($criteria->offset() !== null) {
             $query->offset($criteria->offset());
         }

@@ -27,7 +27,6 @@ final class WorkedHoursCalculator
         $dailyHours = [];
         $incompleteEntries = [];
 
-        // Agrupar fichajes por día
         $byDate = $this->groupByDate($clockIns);
 
         foreach ($byDate as $date => $dayClockIns) {
@@ -68,21 +67,20 @@ final class WorkedHoursCalculator
         $earlyDepartures = [];
         $missedDays = [];
 
-        // Iterar cada día del rango
         $current = $startDate;
         while ($current <= $endDate) {
             $dateStr = $current->format('Y-m-d');
-            $dayOfWeek = (int) $current->format('N'); // 1=Lunes, 7=Domingo
+            $dayOfWeek = (int) $current->format('N');
 
             $expectedSchedule = $planification->getScheduleForDay($dayOfWeek);
             $dayWorked = $workedResult->dailyHours[$dateStr] ?? null;
 
             if ($expectedSchedule !== null && !$expectedSchedule->isDayOff()) {
                 if ($dayWorked === null) {
-                    // No fichó en un día que debía trabajar
+
                     $missedDays[] = $dateStr;
                 } else {
-                    // Verificar retraso
+
                     $expectedStart = $expectedSchedule->startTime();
                     if ($expectedStart !== null && $dayWorked->firstEntry !== null) {
                         if ($dayWorked->firstEntry > $expectedStart) {
@@ -95,7 +93,6 @@ final class WorkedHoursCalculator
                         }
                     }
 
-                    // Verificar salida anticipada
                     $expectedEnd = $expectedSchedule->endTime();
                     if ($expectedEnd !== null && $dayWorked->lastExit !== null) {
                         if ($dayWorked->lastExit < $expectedEnd) {
@@ -140,7 +137,6 @@ final class WorkedHoursCalculator
             $grouped[$date][] = $clockIn;
         }
 
-        // Ordenar cada día por timestamp
         foreach ($grouped as $date => $dayClockIns) {
             usort($dayClockIns, fn (ClockIn $a, ClockIn $b) =>
                 $a->timestamp()->value() <=> $b->timestamp()->value()
@@ -188,7 +184,6 @@ final class WorkedHoursCalculator
             }
         }
 
-        // Si quedó una entrada sin salida
         if ($entryTime !== null) {
             $hasIncompleteEntry = true;
         }

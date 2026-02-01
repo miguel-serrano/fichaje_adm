@@ -43,7 +43,6 @@ final class CreateEmployeeCommandHandler
 
         $this->repository->save($employee);
 
-        // Publicar eventos registrados por el agregado
         $this->eventBus->publish(...$employee->pullDomainEvents());
     }
 }

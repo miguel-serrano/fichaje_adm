@@ -33,7 +33,7 @@ final class MysqlEventStore
                 'payload' => $event->toPrimitives(),
                 'metadata' => $metadata,
                 'occurred_on' => $event->occurredOn(),
-                'published_at' => null, // Pendiente de publicar
+                'published_at' => null,
             ]);
         }
     }
@@ -162,7 +162,6 @@ final class MysqlEventStore
             }
         }
 
-        // Búsqueda en metadata
         if (isset($filters['user_id'])) {
             $query->where('metadata->user->id', $filters['user_id']);
         }

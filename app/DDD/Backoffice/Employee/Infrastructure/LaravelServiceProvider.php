@@ -39,7 +39,6 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
             EmployeeRepository::class,
         );
 
-        // Registrar voter
         $this->getServiceContainer()->bind(EmployeeVoter::class);
         AuthServiceProvider::tagVoter($this, EmployeeVoter::class);
     }

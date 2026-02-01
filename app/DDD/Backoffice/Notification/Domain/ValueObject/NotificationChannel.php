@@ -6,10 +6,10 @@ namespace App\DDD\Backoffice\Notification\Domain\ValueObject;
 
 enum NotificationChannel: string
 {
-    case DATABASE = 'database';   // Notificación en BD (mostrar en UI)
-    case EMAIL = 'email';         // Envío por email
-    case PUSH = 'push';           // Push notification
-    case SMS = 'sms';             // SMS
+    case DATABASE = 'database';
+    case EMAIL = 'email';
+    case PUSH = 'push';
+    case SMS = 'sms';
 
     public function label(): string
     {

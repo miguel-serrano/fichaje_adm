@@ -15,7 +15,7 @@ final class SimpleManagerFinder implements ManagerFinderInterface
 {
     public function findManagerFor(int $employeeId): ?int
     {
-        // Por ahora, retorna el primer usuario con rol admin o manager
+
         $manager = EloquentUserModel::whereHas('role', function ($query) {
             $query->whereIn('name', ['admin', 'manager', 'super_admin']);
         })->first();

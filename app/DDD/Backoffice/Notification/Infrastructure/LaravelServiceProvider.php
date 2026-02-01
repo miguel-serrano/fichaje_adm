@@ -36,7 +36,6 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
             SimpleManagerFinder::class,
         );
 
-        // Servicio de notificaciones
         $this->getServiceContainer()->bind(Notifier::class);
     }
 
@@ -44,7 +43,6 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
     {
         parent::boot();
 
-        // Registrar subscribers
         $this->registerEventSubscribers();
     }
 

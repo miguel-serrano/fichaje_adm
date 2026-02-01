@@ -12,9 +12,9 @@ use App\DDD\Shared\Domain\ValueObject\IntValueObject;
  */
 final class WorkplaceRadius extends IntValueObject
 {
-    private const MIN_RADIUS = 10;      // 10 metros mínimo
-    private const MAX_RADIUS = 10000;   // 10 km máximo
-    private const DEFAULT_RADIUS = 100; // 100 metros por defecto
+    private const MIN_RADIUS = 10;
+    private const MAX_RADIUS = 10000;
+    private const DEFAULT_RADIUS = 100;
 
     public static function create(int $value): static
     {

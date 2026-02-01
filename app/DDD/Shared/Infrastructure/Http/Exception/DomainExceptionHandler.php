@@ -29,15 +29,13 @@ final class DomainExceptionHandler
      * Mapa de excepciones a códigos HTTP
      */
     private const HTTP_CODES = [
-        // Not Found (404)
+
         ClockInNotFoundException::class => 404,
         EmployeeNotFoundException::class => 404,
         WorkplaceNotFoundException::class => 404,
 
-        // Forbidden (403)
         AccessDeniedException::class => 403,
 
-        // Unprocessable Entity (422) - Validation errors
         InvalidEmployeeEmailException::class => 422,
         InvalidEmployeeNameException::class => 422,
         InvalidEmployeeNidException::class => 422,
@@ -45,7 +43,6 @@ final class DomainExceptionHandler
         InvalidCoordinatesException::class => 422,
         InvalidWorkplaceRadiusException::class => 422,
 
-        // Conflict (409)
         GeofenceViolationException::class => 409,
     ];
 

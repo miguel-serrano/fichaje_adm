@@ -12,7 +12,7 @@ final class CreateClockInRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // La autorización se maneja en el Handler
+        return true;
     }
 
     public function rules(): array

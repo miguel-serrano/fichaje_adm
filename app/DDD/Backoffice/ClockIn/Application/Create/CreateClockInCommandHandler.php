@@ -54,10 +54,8 @@ final class CreateClockInCommandHandler
 
         $this->repository->save($clockIn);
 
-        // Publicar eventos registrados por el agregado (ClockInCreatedEvent)
         $events = $clockIn->pullDomainEvents();
 
-        // Verificar geofence si hay workplace y coordenadas no son cero
         if ($command->workplaceId !== null && ($command->latitude != 0.0 || $command->longitude != 0.0)) {
             $workplaceId = WorkplaceId::create($command->workplaceId);
             $workplace = $this->workplaceRepository->findById($workplaceId);

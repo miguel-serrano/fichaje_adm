@@ -27,25 +27,22 @@ final class EventEnricher
     public function enrich(DomainEvent $event): array
     {
         $metadata = [
-            // Trazabilidad
+
             'correlation_id' => $this->correlationIdProvider->get(),
             'causation_id' => $this->correlationIdProvider->getCausationId(),
             'enriched_at' => (new \DateTimeImmutable())->format('Y-m-d\TH:i:s.uP'),
 
-            // Contextos
             'user' => $this->userContextProvider->getContext(),
             'request' => $this->requestContextProvider->getContext(),
             'geo' => $this->getGeoContext(),
             'system' => $this->getSystemContext(),
 
-            // Info del evento
             'event_meta' => [
                 'class' => get_class($event),
                 'version' => $this->getEventVersion($event),
             ],
         ];
 
-        // Enrichers personalizados
         foreach ($this->customEnrichers as $enricher) {
             $customData = $enricher($event, $metadata);
             if (is_array($customData)) {
@@ -58,7 +55,7 @@ final class EventEnricher
 
     /**
      * Registra un enricher personalizado
-     * 
+     *
      * @param callable(DomainEvent, array): ?array $enricher
      */
     public function registerEnricher(callable $enricher): void

@@ -9,7 +9,7 @@ use Monolog\Processor\ProcessorInterface;
 
 /**
  * Enriquece todos los logs con contexto adicional
- * 
+ *
  * Registrar en AppServiceProvider:
  * $this->app->resolving(LogManager::class, function ($log) {
  *     LogEnricher::register($log);
@@ -25,7 +25,6 @@ final class LogEnricher implements ProcessorInterface
             return;
         }
 
-        // Esto se aplicará a todos los canales de log
         foreach ($logManager->getChannels() as $channel) {
             if (method_exists($channel, 'pushProcessor')) {
                 $channel->pushProcessor(new self());
@@ -37,7 +36,7 @@ final class LogEnricher implements ProcessorInterface
 
     public function __invoke(array $record): array
     {
-        // Añadir contexto enriquecido
+
         $record['extra'] = array_merge(
             $record['extra'] ?? [],
             $this->getEnrichedContext()
@@ -49,21 +48,17 @@ final class LogEnricher implements ProcessorInterface
     private function getEnrichedContext(): array
     {
         return [
-            // Identificadores
+
             'correlation_id' => $this->getCorrelationId(),
             'request_id' => $this->getRequestId(),
 
-            // Usuario
             'user_id' => auth()->id(),
             'user_email' => auth()->user()?->email,
 
-            // Request
             'request' => $this->getRequestContext(),
 
-            // Sistema
             'system' => $this->getSystemContext(),
 
-            // Timing
             'timestamp_ms' => (int) (microtime(true) * 1000),
         ];
     }

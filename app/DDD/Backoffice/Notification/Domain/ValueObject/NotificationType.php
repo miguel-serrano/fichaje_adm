@@ -6,17 +6,15 @@ namespace App\DDD\Backoffice\Notification\Domain\ValueObject;
 
 enum NotificationType: string
 {
-    // Fichajes
+
     case CLOCK_IN_LATE = 'clock_in_late';
     case CLOCK_IN_EARLY_DEPARTURE = 'clock_in_early_departure';
     case CLOCK_IN_MISSED = 'clock_in_missed';
     case CLOCK_IN_GEOFENCE_VIOLATION = 'clock_in_geofence_violation';
-    
-    // Empleados
+
     case EMPLOYEE_CONTRACT_EXPIRING = 'employee_contract_expiring';
     case EMPLOYEE_CREATED = 'employee_created';
-    
-    // Sistema
+
     case SYSTEM_ALERT = 'system_alert';
     case SYSTEM_INFO = 'system_info';
 

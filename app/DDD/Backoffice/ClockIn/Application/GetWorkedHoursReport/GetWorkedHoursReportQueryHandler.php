@@ -32,17 +32,14 @@ final class GetWorkedHoursReportQueryHandler
         $startDate = new DateTimeImmutable($query->startDate);
         $endDate = new DateTimeImmutable($query->endDate);
 
-        // Obtener fichajes del periodo
         $clockIns = $this->clockInRepository->findByEmployeeAndDateRange(
             employeeId: $employeeId,
             startDate: $startDate,
             endDate: $endDate,
         );
 
-        // Calcular horas trabajadas
         $workedResult = $this->calculator->calculateWorkedHours($clockIns);
 
-        // Comparar con planificación si se solicita
         $comparisonResult = null;
         if ($query->compareWithPlanification) {
             $employee = $this->employeeRepository->findById($employeeId);

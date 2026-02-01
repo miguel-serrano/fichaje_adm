@@ -46,7 +46,6 @@ final class EmployeeNid extends StringValueObject
             return false;
         }
 
-        // Convertir primera letra a número
         $firstLetter = substr($nie, 0, 1);
         $replacement = match ($firstLetter) {
             'X' => '0',

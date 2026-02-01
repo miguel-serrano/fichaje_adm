@@ -24,7 +24,7 @@ final class NotifyOnLateArrival implements DomainEventSubscriber
 
     public function __invoke(LateArrivalDetectedEvent $event): void
     {
-        // Obtener el manager del empleado (o admin)
+
         $managerId = $this->managerFinder->findManagerFor($event->employeeId());
 
         if ($managerId === null) {

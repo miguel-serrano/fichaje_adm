@@ -40,7 +40,6 @@ final class Notifier
             data: $data !== null ? NotificationData::create($data) : null,
         );
 
-        // Para canal DATABASE, marcamos como enviada inmediatamente
         if ($channel === NotificationChannel::DATABASE) {
             $notification->markAsSent();
         }

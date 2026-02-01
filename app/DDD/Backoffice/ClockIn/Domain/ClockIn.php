@@ -57,7 +57,6 @@ class ClockIn
             updatedAt: null,
         );
 
-        // Registrar evento de dominio
         $clockIn->recordEvent(new ClockInCreatedEvent(
             aggregateId: (string) $id->value(),
             employeeId: $employeeId->value(),

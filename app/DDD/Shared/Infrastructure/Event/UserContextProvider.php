@@ -95,7 +95,7 @@ final class UserContextProvider
 
     private function getImpersonator(): ?int
     {
-        // Si usas impersonación de usuarios
+
         return session('impersonator_id');
     }
 }

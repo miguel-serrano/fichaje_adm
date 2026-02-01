@@ -127,7 +127,7 @@ class Workplace
     public function isWithinGeofence(float $latitude, float $longitude): bool
     {
         if (!$this->hasGeofence()) {
-            return true; // Sin geofence, siempre válido
+            return true;
         }
 
         $distance = $this->calculateDistance($latitude, $longitude);
@@ -144,7 +144,7 @@ class Workplace
             return 0.0;
         }
 
-        $earthRadius = 6371000; // Radio de la Tierra en metros
+        $earthRadius = 6371000;
 
         $latFrom = deg2rad($this->latitude->value());
         $lonFrom = deg2rad($this->longitude->value());

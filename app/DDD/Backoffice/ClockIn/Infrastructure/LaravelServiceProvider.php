@@ -29,10 +29,8 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
             ClockInRepository::class,
         );
 
-        // Servicio de cálculo de horas
         $this->getServiceContainer()->bind(WorkedHoursCalculator::class);
 
-        // Registrar voter
         $this->getServiceContainer()->bind(ClockInVoter::class);
         AuthServiceProvider::tagVoter($this, ClockInVoter::class);
     }
@@ -41,7 +39,6 @@ final class LaravelServiceProvider extends AbstractLaravelServiceProvider
     {
         parent::boot();
 
-        // Registrar subscribers
         $this->registerEventSubscribers();
     }
 

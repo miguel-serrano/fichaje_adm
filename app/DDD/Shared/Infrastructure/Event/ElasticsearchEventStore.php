@@ -147,17 +147,14 @@ final class ElasticsearchEventStore implements EventStoreInterface
     {
         $must = [];
 
-        // Filtro por event_name
         if (isset($filters['event_name'])) {
             $must[] = ['term' => ['event_name.keyword' => $filters['event_name']]];
         }
 
-        // Filtro por aggregate_id
         if (isset($filters['aggregate_id'])) {
             $must[] = ['term' => ['aggregate_id.keyword' => $filters['aggregate_id']]];
         }
 
-        // Filtro por rango de fechas
         if (isset($filters['from']) || isset($filters['to'])) {
             $range = [];
             if (isset($filters['from'])) {
@@ -169,12 +166,10 @@ final class ElasticsearchEventStore implements EventStoreInterface
             $must[] = ['range' => ['occurred_on' => $range]];
         }
 
-        // Búsqueda en payload (full-text)
         if (isset($filters['payload_search'])) {
             $must[] = ['match' => ['payload' => $filters['payload_search']]];
         }
 
-        // Filtro por campo específico del payload
         if (isset($filters['payload_field']) && isset($filters['payload_value'])) {
             $must[] = ['term' => ["payload.{$filters['payload_field']}" => $filters['payload_value']]];
         }

@@ -62,7 +62,6 @@ final class LoggingCommandBus implements CommandBusInterface
             $property->setAccessible(true);
             $value = $property->getValue($command);
 
-            // Ocultar datos sensibles
             $name = $property->getName();
             if (in_array($name, ['password', 'token', 'secret', 'api_key'])) {
                 $value = '***HIDDEN***';

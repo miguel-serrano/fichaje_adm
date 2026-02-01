@@ -46,11 +46,11 @@ final class ApiRateLimitMiddleware
     private function getMaxAttempts(string $limitName): int
     {
         return match ($limitName) {
-            'api' => 60,           // 60 requests per minute
-            'auth' => 5,           // 5 login attempts
-            'upload' => 10,        // 10 uploads per minute
-            'export' => 5,         // 5 exports per minute
-            'events_sync' => 10,   // 10 syncs per minute
+            'api' => 60,
+            'auth' => 5,
+            'upload' => 10,
+            'export' => 5,
+            'events_sync' => 10,
             default => 60,
         };
     }
@@ -58,9 +58,9 @@ final class ApiRateLimitMiddleware
     private function getDecayMinutes(string $limitName): int
     {
         return match ($limitName) {
-            'auth' => 5,           // 5 minutos de bloqueo tras exceder
+            'auth' => 5,
             'export' => 5,
-            default => 1,          // 1 minuto por defecto
+            default => 1,
         };
     }
 
