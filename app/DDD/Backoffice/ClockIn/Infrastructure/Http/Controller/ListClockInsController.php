@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DDD\Backoffice\ClockIn\Infrastructure\Http\Controller;
 
-use App\DDD\Backoffice\ClockIn\Application\ListByEmployee\ListClockInsByEmployeeQuery;
 use App\DDD\Shared\Infrastructure\Http\Controller\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,49 +18,47 @@ final class ListClockInsController extends BaseController
         $startDate = $request->input('start_date', now()->startOfMonth()->toDateString());
         $endDate = $request->input('end_date', now()->endOfMonth()->toDateString());
 
-        $clockIns = [];
+        $query = DB::table('clock_ins')
+            ->join('employees', 'clock_ins.employee_id', '=', 'employees.id')
+            ->leftJoin('workplaces', 'clock_ins.workplace_id', '=', 'workplaces.id')
+            ->select(
+                'clock_ins.*',
+                'employees.name as employee_name',
+                'employees.last_name as employee_last_name',
+                'workplaces.name as workplace_name'
+            )
+            ->whereBetween('clock_ins.timestamp', [
+                $startDate.' 00:00:00',
+                $endDate.' 23:59:59',
+            ])
+            ->orderByDesc('clock_ins.timestamp')
+            ->limit(50);
 
         if ($employeeId) {
-            $response = $this->queryBus->ask(new ListClockInsByEmployeeQuery(
-                activeUserId: $this->activeUserId(),
-                employeeId: (int) $employeeId,
-                startDate: $startDate,
-                endDate: $endDate,
-            ));
-
-            $clockIns = $response->toArray();
-        } else {
-            $clockIns = DB::table('clock_ins')
-                ->join('employees', 'clock_ins.employee_id', '=', 'employees.id')
-                ->leftJoin('workplaces', 'clock_ins.workplace_id', '=', 'workplaces.id')
-                ->select(
-                    'clock_ins.*',
-                    'employees.name as employee_name',
-                    'employees.last_name as employee_last_name',
-                    'workplaces.name as workplace_name'
-                )
-                ->orderByDesc('clock_ins.timestamp')
-                ->limit(50)
-                ->get()
-                ->map(fn ($c) => [
-                    'id' => $c->id,
-                    'employee_id' => $c->employee_id,
-                    'employee_name' => $c->employee_name . ' ' . $c->employee_last_name,
-                    'type' => $c->type,
-                    'timestamp' => $c->timestamp,
-                    'workplace_name' => $c->workplace_name,
-                    'latitude' => $c->latitude,
-                    'longitude' => $c->longitude,
-                ])
-                ->toArray();
+            $query->where('clock_ins.employee_id', (int) $employeeId);
         }
+
+        $clockIns = $query->get()
+            ->map(fn ($c) => [
+                'id' => $c->id,
+                'employee_id' => $c->employee_id,
+                'employee_name' => $c->employee_name.' '.$c->employee_last_name,
+                'type' => $c->type,
+                'timestamp' => $c->timestamp,
+                'date' => date('Y-m-d', strtotime($c->timestamp)),
+                'time' => date('H:i:s', strtotime($c->timestamp)),
+                'workplace_name' => $c->workplace_name,
+                'latitude' => $c->latitude,
+                'longitude' => $c->longitude,
+            ])
+            ->toArray();
 
         $employees = DB::table('employees')
             ->where('is_active', true)
             ->get()
             ->map(fn ($e) => [
                 'id' => $e->id,
-                'name' => $e->name . ' ' . $e->last_name,
+                'name' => $e->name.' '.$e->last_name,
             ]);
 
         $workplaces = DB::table('workplaces')

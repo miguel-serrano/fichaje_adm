@@ -1,4 +1,4 @@
-.PHONY: up down stop test test-filter build npm-dev npm-build migrate fresh pint shell
+.PHONY: up down stop test test-filter build npm-dev npm-build migrate fresh pint shell mysql
 
 up:
 	vendor/bin/sail up -d
@@ -35,3 +35,6 @@ pint:
 
 shell:
 	vendor/bin/sail shell
+
+mysql:
+	docker exec -it fichajes-app-mysql-1 mysql -u sail -ppassword

@@ -112,7 +112,7 @@ const typeColors = {
                     >
                         <option value="">Todos</option>
                         <option v-for="emp in employees" :key="emp.id" :value="emp.id">
-                            {{ emp.full_name }}
+                            {{ emp.name }}
                         </option>
                     </select>
                 </div>
